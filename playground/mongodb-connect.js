@@ -1,10 +1,11 @@
 // const MongoClient = require("mongodb").MongoClient;
 const { MongoClient, ObjectID } = require("mongodb");
+const {mongoURI}=require("../config/keys");
 
-MongoClient.connect("mongodb://localhost:27017/TodoApp", (err, db) => {
+MongoClient.connect(mongoURI, (err, db) => {
   if (err) {
     return console.log("Unable to connect to mongodb server" + err);
-  }
+  };
   console.log("Conneted to MongoDB server");
 
   // db.collection("Todos").insertOne(
