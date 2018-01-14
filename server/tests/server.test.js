@@ -1,11 +1,13 @@
 const expect = require("expect");
 const request = require("supertest");
 
+const { ObjectID } = require("mongodb");
 const { app } = require("../server.js");
 const { Todo } = require("../models/todos");
 
 const todos = [
   {
+    _id: new ObjectID(),
     text: "First test todo"
   },
   {
@@ -19,7 +21,7 @@ beforeEach(done => {
       return Todo.insertMany(todos);
       // done();
     })
-    .then(done());
+    .then(()=>done());
 });
 
 describe("Post /Todos", () => {
@@ -31,7 +33,7 @@ describe("Post /Todos", () => {
       .send({ text })
       .expect(200)
       .expect(() => {
-        expect(res.body.text).toBe(text);
+        expect(res.body.text).toBe();
       })
       .end((err, res) => {
         if (err) {
@@ -42,7 +44,7 @@ describe("Post /Todos", () => {
           .then(todos => {
             expect(todos.length).toBe(1);
             expect(todos[0].text).toBe(text);
-            done();
+            //done();
           })
           .catch(e => {
             done(e);
@@ -62,13 +64,14 @@ describe("Post /Todos", () => {
 
         Todo.find()
           .then((todos, done) => {
-            expect(todos.length).toBe(2);
+            expect(todos.length).toBe(0);
             done();
           })
           .catch(e => {
             done(e);
           });
       });
+    // expect([1]).toBeEmpty();
   });
 
   describe("Get /todos", () => {
@@ -77,10 +80,23 @@ describe("Post /Todos", () => {
         .get("/todos")
         .expect(200)
         .expect(res => {
-          expect(res.body.todos.length).toBe(2);
-          console.log(JSON.stringify(res, undefined, 2));
+          expect(res.body.todos.length).toBe(10);
+          // console.log(JSON.stringify(res, undefined, 2));
         })
-        .end(done());
+        .end(done);
     });
   });
+
+  describe("GET /todos/:id", () => {
+    it("Should return todo doc", done => {
+      request(app)
+        .get(`/todos/${todos[0]._id.toHexString()}`)
+        .expect(404)
+        .expect(res => {
+          expect(res.body.todo.text).toBe(todos[0].text);
+        })
+        .end(done);
+
+  });
+});
 });
