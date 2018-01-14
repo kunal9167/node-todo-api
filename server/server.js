@@ -71,7 +71,7 @@ app.get("/todos/:id", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Started on ${port}");
+  console.log(`Started on ${port}`);
 });
 
 module.exports = {
