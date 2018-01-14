@@ -70,7 +70,7 @@ app.get("/todos/:id", (req, res) => {
     .catch(e => res.status(400));
 });
 
-app.listen(port, () => {
+app.listen(port, (port) => {
   console.log(`Started on ${port}`);
 });
 
