@@ -8,6 +8,7 @@ const { Todo } = require("./models/todos");
 const { User } = require("./models/users");
 const { authenticate } = require("./middleware/authenticate.js");
 var app = express();
+
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
@@ -56,18 +57,16 @@ app.get("/todos/:id", (req, res) => {
 
   // Invalid Object ID
   if (!ObjectID.isValid(id)) {
-    res.status(404).send();
+    return res.status(404).send();
   }
 
   Todo.findById(id)
-    .then(todos => {
-      if (todos) {
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send();
         // console.log(JSON.stringify(todos, undefined, 2));
-        res.send(todos);
-      } else {
-        // ID not found
-        res.status(404).send();
       }
+      return res.send({ todo });
     })
     .catch(e => res.status(400));
 });
@@ -77,18 +76,16 @@ app.delete("/todos/:id", (req, res) => {
 
   // Invalid Object ID
   if (!ObjectID.isValid(id)) {
-    res.status(404).send();
+    return res.status(404).send();
   }
 
   Todo.findByIdAndRemove(id)
-    .then(todos => {
-      if (todos) {
+    .then(todo => {
+      if (!todo) {
         // console.log(JSON.stringify(todos, undefined, 2));
-        res.send(todos);
-      } else {
-        // ID not found
-        res.status(404).send();
+        return res.status(404).send();
       }
+      return res.send({ todo });
     })
     .catch(e => res.status(400));
 });
