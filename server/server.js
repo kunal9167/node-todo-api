@@ -52,6 +52,17 @@ app.get("/todos", (req, res) => {
   );
 });
 
+app.get("/users", (req, res) => {
+  User.find().then(
+    user => {
+      res.send({ user });
+    },
+    err => {
+      res.status(400).send(err);
+    }
+  );
+});
+
 app.get("/todos/:id", (req, res) => {
   var id = req.params.id;
 
