@@ -9,13 +9,15 @@ const userTwoId = new ObjectID();
 const todos = [
   {
     _id: new ObjectID(),
-    text: "First Test Todo"
+    text: "First Test Todo",
+    _creator: userOneId
   },
   {
     _id: new ObjectID(),
     text: "Second Test Todo",
     completed: true,
-    completedAt: 333
+    completedAt: 333,
+    _creator: userTwoId
   }
 ];
 
@@ -36,7 +38,15 @@ const users = [
   {
     _id: userTwoId,
     email: "json@example.com",
-    password: "userTwoPass"
+    password: "userTwoPass",
+    tokens: [
+      {
+        access: "auth",
+        token: jwt
+          .sign({ _id: userTwoId.toHexString(), access: "auth" }, "abc123")
+          .toString()
+      }
+    ]
   }
 ];
 
